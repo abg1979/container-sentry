@@ -1,0 +1,14 @@
+# Miscellaneous
+.DS_Store
+yarn-error.log
+
+# Dependencies
+node_modules
+
+# Build output
+build
+web-ext-artifacts
+.idea
+.yarn
+*.lock
+*-lock.json

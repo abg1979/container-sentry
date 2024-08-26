@@ -1,0 +1,46 @@
+{
+	"manifest_version": 2,
+	"name": "Alwyas in Container (with Exceptions)",
+	"version": "1.0.0",
+	"description": "Open urls in a container by default, with exceptions for specific sites.",
+	"developer": {
+		"name": "abg1979",
+		"url": "mailto:oss@carbonbulls.com"
+	},
+	"default_locale": "en",
+	"icons": {
+		"48": "icon.svg"
+	},
+	"permissions": [
+		"tabs",
+		"contextualIdentities",
+		"cookies",
+		"storage",
+		"<all_urls>",
+		"contextualIdentities",
+		"cookies",
+		"management",
+		"tabs",
+		"webRequestBlocking",
+		"webRequest"
+	],
+	"background": {
+		"scripts": [
+			"background/tab-updated-listener.js",
+			"background/background.js"
+		]
+	},
+	"web_accessible_resources": [
+		"/togo/*"
+	],
+	"options_ui": {
+		"page": "settings/settings.html"
+	},
+	"incognito": "not_allowed",
+	"applications": {
+		"gecko": {
+			"id": "{a1e9543e-5f73-4763-b376-04e53fd12cbd}",
+			"strict_min_version": "57.0"
+		}
+	}
+}
