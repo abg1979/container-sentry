@@ -26,7 +26,6 @@
 	],
 	"background": {
 		"scripts": [
-			"background/tab-updated-listener.js",
 			"background/background.js"
 		]
 	},
@@ -39,7 +38,7 @@
 	"incognito": "not_allowed",
 	"applications": {
 		"gecko": {
-			"id": "{a1e9543e-5f73-4763-b376-04e53fd12cbd}",
+			"id": "{4a6b7acc-552a-44dc-bf26-bf7f563a1633}",
 			"strict_min_version": "57.0"
 		}
 	}

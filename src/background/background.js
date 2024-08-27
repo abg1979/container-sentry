@@ -37,6 +37,27 @@
     }
   };
 
+  const hasURLException = async function (url) {
+    // return true if multi account container is disabled
+    if (!macAddonEnabled) return true;
+
+    try {
+      console.debug("Fetching URL exceptions: ", url);
+      const { urlContainerMappings, urlExceptions } = await browser.storage.sync.get({ urlContainerMappings: [], urlExceptions: [] })
+      console.debug("Loaded exceptions : ", urlExceptions);
+      const urlsMatched = urlExceptions.reduce((matches, current) => {
+        if (url.match(current.pattern)) {
+          matches.push(current)
+        }
+        return matches
+      }, [])
+      console.debug("Following urls matched...", url, urlsMatched);
+      return urlsMatched.length > 0;
+    } catch (e) {
+      return false;
+    }
+  };
+
   /*
    * Check such pages and ask user to chose a container
    */
@@ -75,24 +96,33 @@
   };
 
   browser.webRequest.onBeforeRequest.addListener(async function containTab(request) {
+    console.debug("Received request for: ", request.url);
     const tab = await browser.tabs.get(request.tabId);
 
     if (request.tabId === -1) return void 0;
     if (tab.incognito) return void 0;
 
     try {
+      console.debug("Checking already contained: ", request.url);
       await browser.contextualIdentities.get(tab.cookieStoreId);
+      console.debug("Already contained... Returning: ", request.url);
       return void 0;
     } catch (e) {
       /* we are not contained yet */
     }
 
+    console.debug("Checking if MAC is enabled: ", request.url);
     if (await isMACAssigned(request.url)) return void 0;
+    console.debug("MAC is enabled... Continuing: ", request.url);
+    console.debug("Checking if URL has exception: ", request.url);
+    if (await hasURLException(request.url)) return void 0;
+    console.debug("URL does not have exception... Continuing: ", request.url);
 
     if (request && shouldCancelEarly(tab, request)) {
       return { cancel: true };
     }
 
+    console.debug("Building container chooser UI: ", request.url);
     const choseUrl = new URL(browser.runtime.getURL('/togo/index.html'));
     choseUrl.searchParams.set('go', request.url);
     await browser.tabs.create({

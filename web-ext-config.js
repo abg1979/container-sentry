@@ -6,4 +6,10 @@ module.exports = {
 	build: {
 		overwriteDest: true,
 	},
+	run: {
+		firefox: 'firefoxdeveloperedition',
+		browserConsole: true,
+		firefoxProfile: 'webext',
+		keepProfileChanges: true,
+	}
 }

@@ -1,27 +1,66 @@
 <template>
-	<div class="row" v-for="url in urls" :key="url.id">
-		<div class="col">
-			<label>URL pattern: <input type="text" v-model="url.pattern" /></label>
-		</div>
-		<div class="col">
-			<label
-				>Container:
-				<select v-model="url.containerName">
-					<option
-						v-for="container in contextualIdentities"
-						:key="container.cookieStoreId"
-						:value="container.name"
-					>
-						{{ container.name }}
-					</option>
-				</select></label
-			>
-		</div>
-	</div>
-	<div class="row">
-		<button @click="save">Save</button>
-		<button @click="addUrl">+</button>
-	</div>
+  <table>
+    <thead>
+      <tr>
+        <th colspan="5">URL Pattern Mappings</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr v-for="url in urlContainerMappings" :key="url.id">
+      <td>URL Pattern</td>
+      <td><input type="text" v-model="url.pattern" /></td>
+      <td>Container</td>
+      <td>
+        <select v-model="url.containerName">
+        <option
+            v-for="container in contextualIdentities"
+            :key="container.cookieStoreId"
+            :value="container.name"
+        >
+          {{ container.name }}
+        </option>
+      </select>
+      </td>
+      <td>
+        <button @click="removeUrl(url.id)">Remove</button>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" class="actions">
+        <button @click="save">Save</button>
+      </td>
+      <td>&nbsp;</td>
+      <td colspan="2" class="actions">
+        <button @click="addUrlContainerMapping">Add Url</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <table>
+    <thead>
+      <tr>
+        <th colspan="3">URL Container Exceptions</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr v-for="url in urlExceptions" :key="url.id">
+      <td>URL Pattern</td>
+      <td><input type="text" v-model="url.pattern" /></td>
+      <td>
+        <button @click="removeUrl(url.id)">Remove</button>
+      </td>
+    </tr>
+    <tr>
+      <td class="actions">
+        <button @click="save">Save</button>
+      </td>
+      <td>&nbsp;</td>
+      <td class="actions">
+        <button @click="addUrlException">Add Url</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </template>
 
 <script>
@@ -31,16 +70,16 @@ import { v4 as uuid } from 'uuid'
 export default {
 	data() {
 		return {
-			urls: [],
+      urlContainerMappings: [],
+      urlExceptions: [],
 			contextualIdentities: [],
-			preferences: {},
 		}
 	},
 	async mounted() {
 		console.debug('Load storage:', await browser.storage.sync.get({ urls: [] }))
-		const { urls, preferences } = await browser.storage.sync.get({ urls: [], preferences: {} })
-		this.urls = urls
-		this.preferences = preferences
+		const { urlContainerMappings, urlExceptions } = await browser.storage.sync.get({ urlContainerMappings: [], urlExceptions: [] })
+		this.urlContainerMappings = urlContainerMappings
+    this.urlExceptions = urlExceptions
 		browser.storage.sync.onChanged.addListener(this.syncStorage)
 		this.contextualIdentities = await browser.contextualIdentities.query({})
 	},
@@ -48,8 +87,8 @@ export default {
 		browser.storage.sync.onChanged.addListener(this.syncStorage)
 	},
 	methods: {
-		addUrl() {
-			this.urls.push({
+		addUrlContainerMapping() {
+			this.urlContainerMappings.push({
 				id: uuid(),
 				pattern: '',
 				// Use name as assumed unique container identifier, as this is how the Multi-Account
@@ -58,25 +97,44 @@ export default {
 				containerName: this.contextualIdentities[0].name,
 			})
 		},
+		addUrlException() {
+			this.urlExceptions.push({
+				id: uuid(),
+				pattern: '',
+    })
+		},
 		save() {
-			console.debug('Save URLs:', toRaw(this.urls))
-			console.debug('Save Preferences:', toRaw(this.preferences))
-			// TODO: If any URL patterns are empty, remove them
+			console.debug('Save URLs:', toRaw(this.urlContainerMappings))
+			console.debug('Save URLExceptions:', toRaw(this.urlExceptions))
+      for (let i = this.urlContainerMappings.length - 1; i >= 0; i--) {
+        if (this.urlContainerMappings[i].pattern === '') {
+          this.urlContainerMappings.splice(i, 1)
+        }
+      }
+      for (let i = this.urlExceptions.length - 1; i >= 0; i--) {
+        if (this.urlExceptions[i].pattern === '') {
+          this.urlExceptions.splice(i, 1)
+        }
+      }
 			browser.storage.sync.set({
-				urls: toRaw(this.urls),
-				preferences: toRaw(this.preferences),
+        urlContainerMappings: toRaw(this.urlContainerMappings),
+        urlExceptions: toRaw(this.urlExceptions),
 			})
 		},
 		syncStorage(changes) {
 			console.debug('Storage updated:', changes)
-			if (changes.urls) {
-				this.urls = changes.urls.newValue
+			if (changes.urlContainerMappings) {
+				this.urlContainerMappings = changes.urlContainerMappings.newValue
 			}
-			if (changes.preferences) {
-				this.preferences = changes.preferences.newValue
+			if (changes.urlExceptions) {
+				this.urlExceptions = changes.urlExceptions.newValue
 			}
+
 		},
-		// TODO: add function to remove urls
+    removeUrl(id) {
+      this.urlExceptions = this.urlExceptions.filter(url => url.id !== id)
+      this.urlContainerMappings = this.urlContainerMappings.filter(url => url.id !== id)
+    },
 	},
 }
 </script>
@@ -85,5 +143,39 @@ export default {
 .row {
 	display: flex;
 	width: 100%;
+}
+
+/* Basic table styling */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 18px;
+  text-align: left;
+}
+
+/* Table header styling */
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+/* Table header background color */
+th {
+  background-color: #f2f2f2;
+}
+
+/* Alternate row colors */
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Hover effect for rows */
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+.actions {
+  text-align: center;
 }
 </style>

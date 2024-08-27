@@ -1,7 +1,7 @@
 {
-	"name": "always-container-exceptions",
+	"name": "always-use-containers-with-exceptions",
 	"description": "A Firefox extension to open any URL (not just those with a specific domain) in a multi-account container",
-	"repository": "ssh://git@github.com/abg1979/always-container-exceptions.git",
+	"repository": "ssh://git@github.com/abg1979/always-use-containers-with-exceptions.git",
 	"license": "MIT",
 	"scripts": {
 		"start": "concurrently \"webpack --watch\" \"yarn web-ext run --source-dir build/webpack\"",
