@@ -1,6 +1,6 @@
-# open-urls-in-container
+# container-sentry
 
-always-use-containers-with-exceptions is a [Firefox](https://www.mozilla.org/firefox/) extension to open any URL (not just those with a specific domain) in a multi-account container.
+container-sentry is a [Firefox](https://www.mozilla.org/firefox/) extension to open any URL (not just those with a specific domain) in a multi-account container.
 
 The extension consists of a [settings page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Implement_a_settings_page) (`src/settings/`) built with [Vue.js](https://vuejs.org/), and a [background script]() (`src/background/`). The settings page allows users to define regex patterns that, when matched against a URL loaded in the browser, will open that URL in a specified container tab. The background script listens for update events in browser tabs and performs the regex matching and opening of container tabs.
 
@@ -8,7 +8,7 @@ Firefox's [Multi-Account Containers](https://support.mozilla.org/kb/containers) 
 
 ## Installation
 
-This extension can be installed at [addons.mozilla.org](https://addons.mozilla.org/firefox/addon/always-use-containers-with-exceptions/).
+This extension can be installed at [addons.mozilla.org](https://addons.mozilla.org/firefox/addon/container-sentry/).
 
 ## Contributing
 
