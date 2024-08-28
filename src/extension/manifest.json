@@ -1,11 +1,11 @@
 {
 	"manifest_version": 2,
-	"name": "Alwyas in Container (with Exceptions)",
+	"name": "Container Sentry",
 	"version": "1.0.0",
-	"description": "Open urls in a container by default, with exceptions for specific sites.",
+	"description": "Open urls in a container by default, with exceptions for specific sites. It also allows adding regexes to match urls with containers.",
 	"developer": {
 		"name": "abg1979",
-		"url": "mailto:oss@carbonbulls.com"
+		"url": "https://github.com/abg1979/container-sentry"
 	},
 	"default_locale": "en",
 	"icons": {
