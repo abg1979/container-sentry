@@ -1,36 +1,36 @@
 {
-	"name": "container-sentry",
-	"version": "1.0.1",
-	"description": "A Firefox extension to open any URL (not just those with a specific domain) in a multi-account container",
-	"repository": "ssh://git@github.com/abg1979/container-sentry.git",
-	"license": "MPL-2.0",
-	"scripts": {
-		"start": "concurrently \"webpack --watch\" \"yarn web-ext run --source-dir build/webpack\"",
-		"watch:webpack": "webpack --watch",
-		"lint": "yarn web-ext lint",
-		"build": "yarn webpack && yarn web-ext build",
-		"build:webpack": "yarn webpack",
-		"clean": "node tools/clean.js",
-		"dist": "yarn webpack && yarn web-ext build && git archive -o dist/src.zip HEAD"
-	},
-	"dependencies": {
-		"concurrently": "^7.2.2",
-		"copy-webpack-plugin": "^12.0.2",
-		"css-loader": "^7.1.2",
-		"fs-extra": "^11.2.0",
-		"html-webpack-plugin": "^5.5.0",
-		"sass": "^1.53.0",
-		"sass-loader": "^13.0.2",
-		"style-loader": "^4.0.0",
-		"uuid": "^10.0.0",
-		"vue": "^3.2.37",
-		"vue-loader": "^17.0.0",
-		"web-ext": "^8.2.0",
-		"webpack": "^5.73.0",
-		"webpack-cli": "^5.1.4"
-	},
-	"volta": {
-		"node": "20.17.0",
-		"yarn": "4.4.1"
-	}
+    "name": "container-sentry",
+    "version": "1.0.1",
+    "description": "A Firefox extension to open any URL (not just those with a specific domain) in a multi-account container",
+    "repository": "ssh://git@github.com/abg1979/container-sentry.git",
+    "license": "MPL-2.0",
+    "scripts": {
+        "start": "concurrently \"webpack --watch\" \"yarn web-ext run --source-dir build/webpack\"",
+        "watch:webpack": "webpack --watch",
+        "lint": "yarn web-ext lint",
+        "build": "yarn webpack && yarn web-ext build",
+        "build:webpack": "yarn webpack",
+        "clean": "node tools/clean.js",
+        "dist": "yarn webpack && yarn web-ext build && git archive -o dist/src.zip HEAD"
+    },
+    "dependencies": {
+        "concurrently": "^7.2.2",
+        "copy-webpack-plugin": "^12.0.2",
+        "css-loader": "^7.1.2",
+        "fs-extra": "^11.2.0",
+        "html-webpack-plugin": "^5.5.0",
+        "sass": "^1.53.0",
+        "sass-loader": "^13.0.2",
+        "style-loader": "^4.0.0",
+        "uuid": "^10.0.0",
+        "vue": "^3.2.37",
+        "vue-loader": "^17.0.0",
+        "web-ext": "^8.2.0",
+        "webpack": "^5.73.0",
+        "webpack-cli": "^5.1.4"
+    },
+    "volta": {
+        "node": "20.17.0",
+        "yarn": "4.4.1"
+    }
 }

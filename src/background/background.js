@@ -90,8 +90,8 @@
             const cookieStoreId = container[0].cookieStoreId;
             if (cookieStoreId && typeof cookieStoreId === 'string') {
                 console.debug(`Replacing tab. cookieStoreId was '${cookieStoreId}'.`);
-                const { active, index, windowId } = currentTab;
-                browser.tabs.create({ url: url + '', active, cookieStoreId, index, windowId });
+                const {active, index, windowId} = currentTab;
+                browser.tabs.create({url: url + '', active, cookieStoreId, index, windowId});
                 console.debug(`Successfully replaced tab. cookieStoreId was '${cookieStoreId}'.`);
                 console.debug(`Removing current tab. Tab ID was '${currentTab.id}'.`);
                 browser.tabs.remove(currentTab.id);

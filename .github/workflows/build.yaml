@@ -1,38 +1,38 @@
 # github workflow for building this package
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
 jobs:
-  push-build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    push-build:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v4
 
-      - name: Package source code including submodules
-        uses: qmonnet/git-archive-all-action@v1
-        with:
-          output-files: dist/srcs-full-${{ github.ref_name }}.tar.gz dist/srcs-full-${{ github.ref_name }}.zip
+            -   name: Package source code including submodules
+                uses: qmonnet/git-archive-all-action@v1
+                with:
+                    output-files: dist/srcs-full-${{ github.ref_name }}.tar.gz dist/srcs-full-${{ github.ref_name }}.zip
 
-      - name: Set up NodeJS
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'yarn'
+            -   name: Set up NodeJS
+                uses: actions/setup-node@v4
+                with:
+                    node-version: 20
+                    cache: 'yarn'
 
-      - name: Install dependencies
-        run: yarn install
+            -   name: Install dependencies
+                run: yarn install
 
-      - name: Build
-        run: npm run build
+            -   name: Build
+                run: npm run build
 
-      - name: Create Github Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: web-ext-artifacts/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            -   name: Create Github Release
+                uses: softprops/action-gh-release@v2
+                with:
+                    files: web-ext-artifacts/*
+                env:
+                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

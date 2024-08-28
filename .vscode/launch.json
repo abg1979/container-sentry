@@ -1,12 +1,12 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"name": "Launch extension",
-			"type": "firefox",
-			"request": "launch",
-			"reAttach": true,
-			"addonPath": "${workspaceFolder}",
-		}
-	]
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch extension",
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "addonPath": "${workspaceFolder}"
+        }
+    ]
 }

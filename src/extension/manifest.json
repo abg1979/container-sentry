@@ -1,42 +1,42 @@
 {
-	"manifest_version": 2,
-	"name": "Container Sentry",
-	"version": "1.0.1",
-	"description": "Open urls in a container by default, with exceptions for specific sites. It also allows adding regexes to match urls with containers.",
-	"developer": {
-		"name": "abg1979",
-		"url": "https://github.com/abg1979/container-sentry"
-	},
-	"default_locale": "en",
-	"icons": {
-		"48": "icon.svg"
-	},
-	"permissions": [
-		"tabs",
-		"contextualIdentities",
-		"cookies",
-		"storage",
-		"<all_urls>",
-		"management",
-		"webRequestBlocking",
-		"webRequest"
-	],
-	"background": {
-		"scripts": [
-			"background/background.js"
-		]
-	},
-	"web_accessible_resources": [
-		"/togo/*"
-	],
-	"options_ui": {
-		"page": "settings/settings.html"
-	},
-	"incognito": "not_allowed",
-	"browser_specific_settings": {
-		"gecko": {
-			"id": "{4a6b7acc-552a-44dc-bf26-bf7f563a1633}",
-			"strict_min_version": "58.0"
-		}
-	}
+    "manifest_version": 2,
+    "name": "Container Sentry",
+    "version": "1.0.1",
+    "description": "Open urls in a container by default, with exceptions for specific sites. It also allows adding regexes to match urls with containers.",
+    "developer": {
+        "name": "abg1979",
+        "url": "https://github.com/abg1979/container-sentry"
+    },
+    "default_locale": "en",
+    "icons": {
+        "48": "icon.svg"
+    },
+    "permissions": [
+        "tabs",
+        "contextualIdentities",
+        "cookies",
+        "storage",
+        "<all_urls>",
+        "management",
+        "webRequestBlocking",
+        "webRequest"
+    ],
+    "background": {
+        "scripts": [
+            "background/background.js"
+        ]
+    },
+    "web_accessible_resources": [
+        "/togo/*"
+    ],
+    "options_ui": {
+        "page": "settings/settings.html"
+    },
+    "incognito": "not_allowed",
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "{4a6b7acc-552a-44dc-bf26-bf7f563a1633}",
+            "strict_min_version": "58.0"
+        }
+    }
 }
