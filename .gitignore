@@ -12,3 +12,4 @@ web-ext-artifacts
 .yarn
 *.lock
 *-lock.json
+dist

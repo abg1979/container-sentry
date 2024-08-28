@@ -9,7 +9,8 @@
 		"lint": "yarn web-ext lint",
 		"build": "yarn webpack && yarn web-ext build",
 		"build:webpack": "yarn webpack",
-		"clean": "node tools/clean.js"
+		"clean": "node tools/clean.js",
+		"dist": "yarn webpack && yarn web-ext build && git archive -o dist/src.zip HEAD"
 	},
 	"dependencies": {
 		"concurrently": "^7.2.2",

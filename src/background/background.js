@@ -181,6 +181,7 @@
         // check if url has a container assigned
         console.debug("Checking if URL has container assigned: ", request.url);
         if (await doURLContainerMatchSwitch(request.url, tab)) {
+            console.debug("URL has container assigned... Switched: ", request.url);
             return {cancel: true};
         }
 
