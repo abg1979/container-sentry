@@ -6,8 +6,8 @@ to specify regular expressions for urls which are allowed to be loaded outside a
 This was needed because the VPN provider used by my employer opens a local html page which redirects to the authentication page.
 The [Always in Container](https://addons.mozilla.org/en-US/firefox/addon/always-in-container) intercepts this request and breaks the context which in the end fails the logon to VPN.
 
-The extension consists of a [settings page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Implement_a_settings_page) (`src/settings/`) built with [Vue.js](https://vuejs.org/), and a [background script]() (`src/background/`). 
-The settings page allows users to define regex patterns that, when matched against a URL loaded in the browser, will open that URL in a specified 
+The extension consists of a [settings page](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Implement_a_settings_page) (`src/settings/`) built with [Vue.js](https://vuejs.org/), and a [background script](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Intercept_HTTP_requests) (`src/background/`).
+The settings page allows users to define regex patterns that, when matched against a URL loaded in the browser, will open that URL in a specified
 container tab. The background script listens for update events in browser tabs and performs the regex matching and opening of container tabs.
 
 Firefox's [Multi-Account Containers](https://support.mozilla.org/kb/containers) extension provides similar functionality out of the box, but only allows for matching URLs based on 

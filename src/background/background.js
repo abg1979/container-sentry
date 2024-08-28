@@ -58,7 +58,7 @@
         }
     };
 
-    const doURLContainerMatchSwitch = async function (url) {
+    const doURLContainerMatchSwitch = async function (url, currentTab) {
         // return true if multi account container is disabled
         if (!macAddonEnabled) return false;
 
@@ -79,27 +79,29 @@
                 console.debug("No container assigned for URL: ", url);
                 return false;
             }
-            console.debug("URL has a container assigned... Trying to switch to it: ", request.url, containerName);
+            console.debug("URL has a container assigned... Trying to switch to it: ", url, containerName);
             const container = await browser.contextualIdentities.query({
                 name: containerName,
             });
             if (container.length === 0) {
-                console.debug("Container not found... Skipping switch: ", request.url, containerName);
+                console.debug("Container not found... Skipping switch: ", url, containerName);
                 return false;
             }
             const cookieStoreId = container[0].cookieStoreId;
             if (cookieStoreId && typeof cookieStoreId === 'string') {
                 console.debug(`Replacing tab. cookieStoreId was '${cookieStoreId}'.`);
-                browser.tabs.create({
-                    url: request.url + '',
-                    cookieStoreId,
-                });
-                browser.tabs.remove(tab.id);
+                const { active, index, windowId } = currentTab;
+                browser.tabs.create({ url: url + '', active, cookieStoreId, index, windowId });
+                console.debug(`Successfully replaced tab. cookieStoreId was '${cookieStoreId}'.`);
+                console.debug(`Removing current tab. Tab ID was '${currentTab.id}'.`);
+                browser.tabs.remove(currentTab.id);
+                console.debug(`Successfully removed current tab. Tab Id was '${currentTab.id}'.`);
                 return true;
             }
             console.debug(`Not replacing tab. cookieStoreId was '${cookieStoreId}'.`);
             return false;
         } catch (e) {
+            console.debug("Not replacing tab. error was:", e);
             return false;
         }
     };
@@ -178,7 +180,7 @@
 
         // check if url has a container assigned
         console.debug("Checking if URL has container assigned: ", request.url);
-        if (await doURLContainerMatchSwitch(request.url)) {
+        if (await doURLContainerMatchSwitch(request.url, tab)) {
             return {cancel: true};
         }
 
