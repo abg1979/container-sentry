@@ -137,20 +137,39 @@ export default {
 
 <style lang="scss" scoped>
 @media (prefers-color-scheme: light) {
-
   /* Table header background color */
   th {
     background-color: #f2f2f2;
   }
-
   /* Alternate row colors */
   tr:nth-child(even) {
     background-color: #f9f9f9;
   }
-
   /* Hover effect for rows */
   tr:hover {
     background-color: #f1f1f1;
+  }
+  th,
+  td {
+    border: 1px solid #ddd;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  /* Table header background color */
+  th {
+    background-color: #333333;
+  }
+  /* Alternate row colors */
+  tr:nth-child(even) {
+    background-color: #222222;
+  }
+  /* Hover effect for rows */
+  tr:hover {
+    background-color: #444444;
+  }
+  th,
+  td {
+    border: 1px solid #888888;
   }
 }
 
@@ -158,7 +177,6 @@ export default {
 th,
 td {
   padding: 12px;
-  border: 1px solid #ddd;
 }
 
 .row {

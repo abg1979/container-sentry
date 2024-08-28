@@ -32,7 +32,7 @@ module.exports = {
 		new VueLoaderPlugin(),
 		new CopyPlugin({
 			patterns: [{ from: 'src/background', to: 'background' }, { from: 'src/extension' }],
-		}),
+		})
 	],
 	watchOptions: {
 		ignored: /node_modules/,

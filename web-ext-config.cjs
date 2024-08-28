@@ -5,6 +5,7 @@ module.exports = {
 	// Command options:
 	build: {
 		overwriteDest: true,
+		filename: '{name}-{version}.xpi',
 	},
 	run: {
 		firefox: 'firefoxdeveloperedition',

@@ -17,10 +17,7 @@
 		"cookies",
 		"storage",
 		"<all_urls>",
-		"contextualIdentities",
-		"cookies",
 		"management",
-		"tabs",
 		"webRequestBlocking",
 		"webRequest"
 	],
@@ -36,10 +33,10 @@
 		"page": "settings/settings.html"
 	},
 	"incognito": "not_allowed",
-	"applications": {
+	"browser_specific_settings": {
 		"gecko": {
 			"id": "{4a6b7acc-552a-44dc-bf26-bf7f563a1633}",
-			"strict_min_version": "57.0"
+			"strict_min_version": "58.0"
 		}
 	}
 }
