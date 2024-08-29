@@ -34,7 +34,7 @@ To load the extension in a development instance of Firefox with automatic reload
 
 ```shell
 yarn install
-yarn start
+npm run start
 ```
 
 ### Building
@@ -43,7 +43,7 @@ To build and package the extension for distribution, run:
 
 ```shell
 yarn install
-yarn build
+npm run build
 ```
 
 This will run a webpack build and place the output in `build/webpack/`, followed by packaging the extension using `web-ext` and placing output

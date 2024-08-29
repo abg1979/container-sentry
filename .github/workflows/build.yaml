@@ -13,11 +13,6 @@ jobs:
             -   name: Checkout code
                 uses: actions/checkout@v4
 
-            -   name: Package source code including submodules
-                uses: qmonnet/git-archive-all-action@v1
-                with:
-                    output-files: dist/srcs-full-${{ github.ref_name }}.tar.gz dist/srcs-full-${{ github.ref_name }}.zip
-
             -   name: Set up NodeJS
                 uses: actions/setup-node@v4
                 with:
@@ -29,10 +24,3 @@ jobs:
 
             -   name: Build
                 run: npm run build
-
-            -   name: Create Github Release
-                uses: softprops/action-gh-release@v2
-                with:
-                    files: web-ext-artifacts/*
-                env:
-                    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
