@@ -10,6 +10,5 @@ build
 web-ext-artifacts
 .idea
 .yarn
-*.lock
 *-lock.json
 dist
