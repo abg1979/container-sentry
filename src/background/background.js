@@ -161,12 +161,16 @@
             /* we are not contained yet */
         }
 
-        console.debug("Checking if MAC is enabled: ", request.url);
-        if (await isMACAssigned(request.url)) {
+        // check if Multi Account Container extension is enabled
+        // we do not have anything to do if it is disabled.
+        if (!macAddonEnabled) {
             console.debug("MAC is disabled... Not doing anything: ", request.url);
             return void 0;
         }
         console.debug("MAC is enabled... Continuing: ", request.url);
+
+        // check if URL has exception allowed, we do not
+        // try to contain it if it is allowed.
         console.debug("Checking if URL has exception: ", request.url);
         if (await hasURLException(request.url)) {
             console.debug("URL has exception... Not doing anything: ", request.url);
@@ -174,17 +178,34 @@
         }
         console.debug("URL does not have exception... Continuing: ", request.url);
 
+        // check if user has already cancelled this request
         if (request && shouldCancelEarly(tab, request)) {
             return {cancel: true};
         }
 
         // check if url has a container assigned
+        // we will switch to that container if it is assigned.
+        // and remove the current tab.
         console.debug("Checking if URL has container assigned: ", request.url);
         if (await doURLContainerMatchSwitch(request.url, tab)) {
             console.debug("URL has container assigned... Switched: ", request.url);
             return {cancel: true};
         }
 
+        // check if Multi Account Container is handling this url
+        // in that case we do not do anything.
+        console.debug("Checking if MAC is handling this url: ", request.url);
+        if (await isMACAssigned(request.url)) {
+            console.debug("MAC is handling this url... Not doing anything: ", request.url);
+            return void 0;
+        }
+
+        // if we are here, we need to ask user to choose a container
+        // the current tab will be removed and a new tab will be opened
+        // the new tab will have the container chooser
+        // after user selection a new tab will be opened in the chosed container
+        // with the url of the current tab.
+        // no data is retained from the current tab.
         console.debug("Building container chooser UI: ", request.url);
         const choseUrl = new URL(browser.runtime.getURL('/togo/index.html'));
         choseUrl.searchParams.set('go', request.url);

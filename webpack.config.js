@@ -1,9 +1,10 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const {VueLoaderPlugin} = require('vue-loader')
+const { VueLoaderPlugin } = require('vue-loader')
 const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
+    mode: 'none',
     entry: {
         settings: './src/settings/settings.js',
     },
@@ -31,7 +32,22 @@ module.exports = {
         }),
         new VueLoaderPlugin(),
         new CopyPlugin({
-            patterns: [{from: 'src/background', to: 'background'}, {from: 'src/extension'}],
+            patterns: [
+                { 
+                    from: 'src/background', 
+                    to: 'background',
+                    info : {
+                        minimized: true
+                    }
+                },
+                { 
+                    from: 'src/extension',
+                    info : {
+                        minimized: true
+                    } 
+                }
+            ],
+
         })
     ],
     watchOptions: {

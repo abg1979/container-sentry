@@ -155,6 +155,7 @@ export default {
     }
 }
 
+/* TODO: Theese do not look good in dark mode */
 @media (prefers-color-scheme: dark) {
     /* Table header background color */
     th {
