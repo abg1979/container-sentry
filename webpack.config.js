@@ -4,7 +4,7 @@ const { VueLoaderPlugin } = require('vue-loader')
 const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-    mode: 'none',
+    mode: 'production',
     entry: {
         settings: './src/settings/settings.js',
     },
@@ -44,7 +44,7 @@ module.exports = {
                     from: 'src/extension',
                     info : {
                         minimized: true
-                    } 
+                    }
                 }
             ],
 
