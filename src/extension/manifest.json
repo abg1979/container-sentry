@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Container Sentry",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Open urls in a container by default, with exceptions for specific sites. It also allows adding regexes to match urls with containers.",
     "developer": {
         "name": "abg1979",
