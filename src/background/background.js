@@ -33,6 +33,7 @@
             });
             return Boolean(assignment);
         } catch (e) {
+            console.debug("Error fetching MAC assignment: ", e);
             return false;
         }
     };
@@ -54,13 +55,17 @@
             console.debug("Following urls matched...", url, urlsMatched);
             return urlsMatched.length > 0;
         } catch (e) {
+            console.debug("Error fetching URL exceptions: ", e);
+            // if we cannot fetch exceptions, we assume that there are no exceptions
             return false;
         }
     };
 
     const doURLContainerMatchSwitch = async function (url, currentTab) {
         // return true if multi account container is disabled
-        if (!macAddonEnabled) return false;
+        if (!macAddonEnabled) {
+            return {continue: true};
+        }
 
         try {
             console.debug("Fetching URL container mappings", url);
@@ -77,7 +82,7 @@
             let containerName = urlsMatched.length > 0 ? urlsMatched[0].containerName : null;
             if (!containerName) {
                 console.debug("No container assigned for URL: ", url);
-                return false;
+                return {continue: true};
             }
             console.debug("URL has a container assigned... Trying to switch to it: ", url, containerName);
             const container = await browser.contextualIdentities.query({
@@ -85,24 +90,35 @@
             });
             if (container.length === 0) {
                 console.debug("Container not found... Skipping switch: ", url, containerName);
-                return false;
+                return {continue: true};
             }
             const cookieStoreId = container[0].cookieStoreId;
             if (cookieStoreId && typeof cookieStoreId === 'string') {
                 console.debug(`Replacing tab. cookieStoreId was '${cookieStoreId}'.`);
+                try {
+                    console.debug("Checking already contained: ", url);
+                    if (currentTab.cookieStoreId === cookieStoreId) {
+                        console.debug("Already contained in same container... Returning: ", url);
+                        return {void : true};
+                    }
+                } catch (e) {
+                    /* we are not contained yet */
+                    console.debug("Cannot find tab container...: ", e, "url: ", url);
+                }
+        
                 const {active, index, windowId} = currentTab;
                 browser.tabs.create({url: url + '', active, cookieStoreId, index, windowId});
                 console.debug(`Successfully replaced tab. cookieStoreId was '${cookieStoreId}'.`);
                 console.debug(`Removing current tab. Tab ID was '${currentTab.id}'.`);
                 browser.tabs.remove(currentTab.id);
                 console.debug(`Successfully removed current tab. Tab Id was '${currentTab.id}'.`);
-                return true;
+                return {cancel: true};
             }
             console.debug(`Not replacing tab. cookieStoreId was '${cookieStoreId}'.`);
-            return false;
+            return {continue: true};
         } catch (e) {
             console.debug("Not replacing tab. error was:", e);
-            return false;
+            return {continue: true};
         }
     };
 
@@ -147,18 +163,16 @@
 
     browser.webRequest.onBeforeRequest.addListener(async function containTab(request) {
         console.debug("Received request for: ", request.url);
-        const tab = await browser.tabs.get(request.tabId);
 
-        if (request.tabId === -1) return void 0;
-        if (tab.incognito) return void 0;
-
-        try {
-            console.debug("Checking already contained: ", request.url);
-            await browser.contextualIdentities.get(tab.cookieStoreId);
-            console.debug("Already contained... Returning: ", request.url);
+        if (request.tabId === -1) {
+            console.debug("Tab cannot be contained: ", request.url);
             return void 0;
-        } catch (e) {
-            /* we are not contained yet */
+        }
+
+        const tab = await browser.tabs.get(request.tabId);
+        if (tab.incognito) {
+            console.debug("Incognito Tab cannot be contained: ", request.url);
+            return void 0;
         }
 
         // check if Multi Account Container extension is enabled
@@ -187,9 +201,14 @@
         // we will switch to that container if it is assigned.
         // and remove the current tab.
         console.debug("Checking if URL has container assigned: ", request.url);
-        if (await doURLContainerMatchSwitch(request.url, tab)) {
-            console.debug("URL has container assigned... Switched: ", request.url);
+        let response = await doURLContainerMatchSwitch(request.url, tab); 
+        if (response?.cancel) {
+            console.debug("URL has container assigned... switched to it : ", request.url);
             return {cancel: true};
+        }
+        if (response?.void) {
+            console.debug("URL has container assigned... already in same : ", request.url);
+            return void 0;
         }
 
         // check if Multi Account Container is handling this url
@@ -198,6 +217,16 @@
         if (await isMACAssigned(request.url)) {
             console.debug("MAC is handling this url... Not doing anything: ", request.url);
             return void 0;
+        }
+
+        try {
+            console.debug("Checking already contained: ", request.url);
+            await browser.contextualIdentities.get(tab.cookieStoreId);
+            console.debug("Already contained... Returning: ", request.url);
+            return void 0;
+        } catch (e) {
+            /* we are not contained yet */
+            console.debug("Cannot find tab container...: ", e, "url: ", request.url);
         }
 
         // if we are here, we need to ask user to choose a container
