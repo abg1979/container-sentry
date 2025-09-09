@@ -1,0 +1,43 @@
+plugins {
+    id 'base'                                           // provides `clean` and `build`
+}
+
+
+tasks.named('build') {
+    dependsOn 'miseBuild'
+}
+
+// Ensure installs respect the lockfile
+tasks.register('miseSetup', Exec) {
+    description = 'Run mise setup task'
+    // set working dir if needed
+    workingDir = file('.')
+    commandLine('mise', 'run', 'setup')
+    inputs.files('package.json', 'yarn.lock')
+    inputs.dir('src')
+    outputs.dirs('node_modules', 'build', 'dist', 'web-ext-artifacts')
+    outputs.file('yarn.lock')
+}
+
+// Run `yarn run build` and wire caching
+tasks.register('miseBuild', Exec) {
+    description = 'Run mise build task'
+    // set working dir if needed
+    workingDir = file('.')
+    dependsOn 'miseSetup'
+    commandLine('mise', 'run', 'build')
+    // Cache based on inputs/outputs of the build
+    inputs.files('package.json', 'yarn.lock')
+    inputs.dir('src')
+    outputs.dir('dist')
+}
+
+tasks.named('clean', Delete) {
+    // List any files/dirs you want gone
+    delete(
+        'dist',
+        'web-ext-artifacts',
+        'build',
+        'node_modules' // uncomment only if you really want to wipe dependencies
+    )
+}

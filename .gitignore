@@ -11,4 +11,7 @@ web-ext-artifacts
 .idea
 .yarn
 *-lock.json
+.vscode/settings.json
 dist
+.gradle
+gradle*

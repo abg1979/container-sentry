@@ -107,10 +107,10 @@
                 }
         
                 const {active, index, windowId} = currentTab;
-                browser.tabs.create({url: url + '', active, cookieStoreId, index, windowId});
+                await browser.tabs.create({url: url + '', active, cookieStoreId, index, windowId});
                 console.debug(`Successfully replaced tab. cookieStoreId was '${cookieStoreId}'.`);
                 console.debug(`Removing current tab. Tab ID was '${currentTab.id}'.`);
-                browser.tabs.remove(currentTab.id);
+                await browser.tabs.remove(currentTab.id);
                 console.debug(`Successfully removed current tab. Tab Id was '${currentTab.id}'.`);
                 return {cancel: true};
             }
