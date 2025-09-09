@@ -1,17 +1,13 @@
 {
     "name": "container-sentry",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "description": "A Firefox extension to open any URL (not just those with a specific domain) in a multi-account container",
     "repository": "ssh://git@github.com/abg1979/container-sentry.git",
     "license": "MPL-2.0",
     "scripts": {
         "start": "concurrently \"webpack --watch\" \"yarn web-ext run --source-dir build/webpack\"",
         "watch:webpack": "webpack --watch",
-        "lint": "yarn web-ext lint",
-        "build": "yarn webpack && yarn web-ext build",
-        "build:webpack": "yarn webpack",
-        "clean": "node tools/clean.js",
-        "dist": "yarn webpack && yarn web-ext build && git archive -o dist/src.zip HEAD"
+        "lint": "yarn web-ext lint"
     },
     "dependencies": {
         "concurrently": "^9.2.1",
@@ -30,6 +26,8 @@
         "webpack-cli": "^5.1.4"
     },
     "devDependencies": {
-        "@types/firefox-webext-browser": "^120.0.4"
+        "@types/firefox-webext-browser": "^120.0.4",
+        "gulp": "^5.0.1",
+        "gulp-clean": "^0.4.0"
     }
 }

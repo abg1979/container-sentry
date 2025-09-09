@@ -229,10 +229,10 @@
             console.debug("Cannot find tab container...: ", e, "url: ", request.url);
         }
 
-        // if we are here, we need to ask user to choose a container
-        // the current tab will be removed and a new tab will be opened
-        // the new tab will have the container chooser
-        // after user selection a new tab will be opened in the chosed container
+        // if we are here, we need to ask user to choose a container.
+        // the current tab will be removed, a new tab will be opened
+        // the new tab will have the container.
+        // after user selection, a new tab will be opened in the chosen container
         // with the url of the current tab.
         // no data is retained from the current tab.
         console.debug("Building container chooser UI: ", request.url);

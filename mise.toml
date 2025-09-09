@@ -7,8 +7,6 @@ _.path = ['{{config_root}}/node_modules/.bin']
 [tools]
 node = "22"
 yarn = "4"
-java = "temurin-21"
-gradle = "9"
 
 [tasks.setup]
 description = "Setup the project"
@@ -16,8 +14,8 @@ run = ['yarn install']
 
 [tasks.build]
 description = "Build the project"
-run = 'yarn run build'
+run = 'gulp build'
 
 [tasks.clean]
 description = "Build the project"
-run = ['gradle clean']
+run = ['gulp clean']
