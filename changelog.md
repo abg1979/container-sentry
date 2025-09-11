@@ -4,37 +4,59 @@ All notable changes to this project will be documented in this file.
 
 ## [v1.0.5]
 
-- Using developer profile.
-- Fixing profile name.
-- Adding gulp based tasks.
-- Merge pull request #25 from abg1979/dependabot/npm_and_yarn/sass-loader-16.0.3
-- Merge pull request #26 from abg1979/dependabot/npm_and_yarn/concurrently-9.1.0
-- Bump sass-loader from 13.3.3 to 16.0.3
-- Bump concurrently from 7.6.0 to 9.1.0
-- Merge pull request #27 from abg1979/dependabot/npm_and_yarn/vue-3.5.13
-- Bump vue from 3.4.38 to 3.5.13
-- Merge remote-tracking branch 'origin/main'
-- Trying to add gradle based build.
-- Merge pull request #28 from abg1979/dependabot/npm_and_yarn/sass-1.81.0
-- Bump sass from 1.77.8 to 1.81.0
-
+- Added `gulpfile.js` and `mise.toml` for new build and environment management workflows.
+- Updated `package.json`:
+  - Version bump to 1.0.5.
+  - Upgraded dependencies: `concurrently`, `sass`, `sass-loader`, `vue`.
+  - Added dev dependencies: `@types/firefox-webext-browser`, `gulp`, `gulp-clean`.
+  - Removed custom clean script and Volta config.
+- Updated `src/background/background.js`:
+  - Made tab creation and removal fully async for reliability.
+  - Improved comments and container chooser logic.
+- Updated `src/extension/manifest.json`:
+  - Version bump to 1.0.5.
+- Updated `.vscode/launch.json`:
+  - Changed debug profile to `developer` and improved path mappings.
+- Removed `tools/clean.js` (now handled by gulp tasks).
+- Various updates to config files and documentation for new build process and dependency management.
 
 ## [v1.0.4]
 
-- Fixing url mapping bugs.
-
+- Updated `src/background/background.js`:
+  - Improved error handling and debug logging for MAC assignment and URL exceptions.
+  - Refined logic for container switching, including better handling of already-contained tabs and incognito tabs.
+  - Enhanced response structure for container switching and error cases.
+- Updated `src/extension/manifest.json`:
+  - Version bump to 1.0.4.
+- Updated `.vscode/launch.json`:
+  - Added `pathMappings` for improved debugging experience.
 
 ## [v1.0.3]
 
-- Bump version to 1.0.3
-- Messed up the settings UI
-
+- Updated `package.json` and `src/extension/manifest.json`: - Version bump to 1.0.3.
+- Updated `webpack.config.js`: - Changed build mode from `none` to `production` for optimized builds. - Minor formatting fix in CopyPlugin config.
 
 ## [v1.0.2]
 
-- Bump version to 1.0.2
-- Adding unminified js files. Fixing a bug with url pattern assignment where it did not work if MAC was already handling the domain.
-- Trying to use yarn 4 in GH actions.
-- Adding yarn.lock
-- Fixed build and run instructions.
-- Using editorconfig
+- Added `.editorconfig` and `yarn.lock` for improved code consistency and dependency management.
+- Updated `src/background/background.js`: - Improved logic for handling Multi-Account Containers (MAC) and URL exceptions. - Added checks for MAC extension state and URL assignments. - Enhanced debug logging and container switching logic.
+- Updated `src/extension/manifest.json`:
+  - Version bump to 1.0.2.
+  - Minor formatting and metadata updates.
+- Updated `src/settings/Settings.vue`:
+  - Refactored UI markup and logic for URL pattern mappings and exceptions.
+  - Improved methods for adding/removing mappings and exceptions.
+  - Enhanced storage sync and contextual identities handling.
+- Various updates to config and localization files for improved build, launch, and internationalization support.
+
+## [v1.0.1]
+
+- Initial public release.
+- Core features:
+  - Open URLs in Firefox Multi-Account Containers by default.
+  - Assign containers to URLs using regex patterns.
+  - Exception system for specific sites.
+  - Settings UI for managing URL mappings and exceptions.
+  - Support for multiple locales (English, Polish, Chinese).
+- Includes build scripts, webpack config, and extension manifest.
+- Added documentation and initial CI workflow.
