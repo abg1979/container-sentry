@@ -194,7 +194,8 @@
 
         // check if user has already cancelled this request
         if (request && shouldCancelEarly(tab, request)) {
-            return {cancel: true};
+            console.debug("Request is cancelled early, not doing anything: ", request.url);
+            return void 0;
         }
 
         // check if url has a container assigned

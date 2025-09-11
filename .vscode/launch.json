@@ -10,7 +10,7 @@
             "profile": "developer",
             "pathMappings": [
                 {
-                    "url": "moz-extension://5e5564d7-76c8-4ec1-a73a-bc1cf3ce4016",
+                    "url": "moz-extension://16abb08e-237e-497f-9016-3ef9c9e193a3",
                     "path": "${workspaceFolder}/src"
                 }
             ]
