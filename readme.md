@@ -21,6 +21,31 @@ domain.
 
 This extension can be installed at [addons.mozilla.org](https://addons.mozilla.org/firefox/addon/container-sentry/).
 
+## How to use
+
+Any url patterns which are to be used with this extension should not have their hostnames assigned to the MAC addon.
+
+### Exceptions
+
+Use the settings page to define url pattern exceptions for which the extension should not try to contain them.
+However if the MAC addon has the host configured to open in a container it may still try to open it in the assigned container.
+
+### Pattern Container Mappings
+
+Use the settings page to define url pattern to container mappings. It is possible that some of the intermediate pages may have to either
+added to the exceptions list. For example, for opening a corporate github repo in a work container, the github login page may redirect to 
+the corporate login page. In this case, the itermediate github.com/enterprises page has to be added to the exceptions list.
+
+Here is the configuration which worked for me:
+
+- Exceptions
+  - `.+github.com/enterprises+`
+  - `.+corporate_login_page_url.+` # This was needed for the VPN to work anyway.
+
+- Pattern Container Mappings
+  - `.+github.com.+corporate_github_org.+` -> Work
+  - `.+github.com.+` -> Code
+
 ## Contributing
 
 ### Prerequisites
