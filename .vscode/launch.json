@@ -7,7 +7,7 @@
             "request": "launch",
             "reAttach": true,
             "addonPath": "${workspaceFolder}/build/webpack",
-            "profile": "webext",
+            "profile": "developer",
             "pathMappings": [
                 {
                     "url": "moz-extension://5e5564d7-76c8-4ec1-a73a-bc1cf3ce4016",
