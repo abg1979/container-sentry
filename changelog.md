@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [v1.0.6]
+
+- Updated `package.json` and `src/extension/manifest.json`:
+  - Version bump to 1.0.6.
+- Updated `src/background/background.js`:
+  - Changed early cancellation logic to log and return void instead of `{cancel: true}` for better debugging and extension behavior.
+- Updated `.vscode/launch.json`:
+  - Updated extension UUID in pathMappings for debugging.
+
 ## [v1.0.5]
 
 - Added `gulpfile.js` and `mise.toml` for new build and environment management workflows.
