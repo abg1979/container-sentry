@@ -10,20 +10,24 @@ jobs:
     push-build:
         runs-on: ubuntu-latest
         steps:
-            -   name: Checkout code
-                uses: actions/checkout@v4
+            - name: Checkout code
+              uses: actions/checkout@v4
 
-            -   name: Enable Corepack
-                run: corepack enable
+            - name: Setup mise
+              uses: jdx/mise-action@v2
+              with:
+                install: true         # run `mise install`
+                cache: true           # enable caching
+                experimental: true    # optional: enable experimental features
 
-            -   name: Set up NodeJS
-                uses: actions/setup-node@v4
-                with:
-                    node-version: 20
-                    cache: 'yarn'
+            - name: Verify node installation
+              run: node --version
 
-            -   name: Install dependencies
-                run: yarn install
+            - name: Verify yarn installation
+              run: yarn --version
 
-            -   name: Build
-                run: npm run build
+            - name: Install dependencies
+              run: yarn install
+
+            - name: Build
+              run: gulp dist
