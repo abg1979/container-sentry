@@ -11,7 +11,7 @@ module.exports = {
     run: {
         firefox: 'firefoxdeveloperedition',
         browserConsole: true,
-        firefoxProfile: 'webext',
+        firefoxProfile: 'developer',
         keepProfileChanges: true,
     }
 }

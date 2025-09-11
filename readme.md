@@ -43,11 +43,11 @@ To build and package the extension for distribution, run:
 
 ```shell
 yarn install
-npm run build
+gulp dist
 ```
 
 This will run a webpack build and place the output in `build/webpack/`, followed by packaging the extension using `web-ext` and placing output
-in `web-ext-artifacts/`.
+in `dist/`.
 
 ### Credits
 
