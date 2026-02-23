@@ -1787,7 +1787,7 @@ __metadata:
     concurrently: ^9.2.1
     copy-webpack-plugin: ^13.0.1
     css-loader: ^7.1.2
-    fs-extra: ^11.2.0
+    fs-extra: ^11.3.3
     gulp: ^5.0.1
     gulp-clean: ^0.4.0
     html-webpack-plugin: ^5.5.0
@@ -2769,6 +2769,17 @@ __metadata:
     jsonfile: "npm:^6.0.1"
     universalify: "npm:^2.0.0"
   checksum: 12968b8b426f298c9ddfa9c2163e828a3bdf295b222895073faaec9798286102d771f54374498b934520cab6ef900ee3d643ea53b98a82703d5c546e16975538
+  languageName: node
+  linkType: hard
+
+"fs-extra@npm:^11.3.3":
+  version: 11.3.3
+  resolution: "fs-extra@npm:11.3.3"
+  dependencies:
+    graceful-fs: ^4.2.0
+    jsonfile: ^6.0.1
+    universalify: ^2.0.0
+  checksum: fb2acabbd1e04bcaca90eadfe98e6ffba1523b8009afbb9f4c0aae5efbca0bd0bf6c9a6831df5af5aaacb98d3e499898be848fb0c03d31ae7b9d1b053e81c151
   languageName: node
   linkType: hard
 
