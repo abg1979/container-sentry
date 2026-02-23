@@ -2,11 +2,15 @@
     <table>
         <thead>
         <tr>
-            <th colspan="5">URL Pattern Mappings</th>
+            <th colspan="6">URL Pattern Mappings <span class="priority-hint">(top = highest priority)</span></th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="url in urlContainerMappings" :key="url.id">
+        <tr v-for="(url, index) in urlContainerMappings" :key="url.id">
+            <td class="order-controls">
+                <button @click="moveUrlUp(index)" :disabled="index === 0" title="Move up (higher priority)">↑</button>
+                <button @click="moveUrlDown(index)" :disabled="index === urlContainerMappings.length - 1" title="Move down (lower priority)">↓</button>
+            </td>
             <td>URL Pattern</td>
             <td><input type="text" v-model="url.pattern"/></td>
             <td>Container</td>
@@ -22,6 +26,7 @@
             </td>
         </tr>
         <tr>
+            <td>&nbsp;</td>
             <td colspan="2" class="actions">
                 <button @click="save">Save</button>
             </td>
@@ -131,6 +136,26 @@ export default {
             this.urlExceptions = this.urlExceptions.filter(url => url.id !== id)
             this.urlContainerMappings = this.urlContainerMappings.filter(url => url.id !== id)
         },
+        moveUrlUp(index) {
+            if (index > 0) {
+                // Swap with previous element
+                const temp = this.urlContainerMappings[index - 1]
+                this.urlContainerMappings[index - 1] = this.urlContainerMappings[index]
+                this.urlContainerMappings[index] = temp
+                // Save immediately
+                this.save()
+            }
+        },
+        moveUrlDown(index) {
+            if (index < this.urlContainerMappings.length - 1) {
+                // Swap with next element
+                const temp = this.urlContainerMappings[index + 1]
+                this.urlContainerMappings[index + 1] = this.urlContainerMappings[index]
+                this.urlContainerMappings[index] = temp
+                // Save immediately
+                this.save()
+            }
+        },
     },
 }
 </script>
@@ -191,12 +216,33 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
-    font-size: 18px;
     text-align: left;
 }
 
 
 .actions {
     text-align: center;
+}
+
+.order-controls {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+}
+
+.order-controls button {
+    padding: 4px 8px;
+    min-width: 32px;
+}
+
+.order-controls button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.priority-hint {
+    font-size: 0.8em;
+    font-weight: normal;
+    opacity: 0.7;
 }
 </style>

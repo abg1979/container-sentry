@@ -46,14 +46,15 @@
             console.debug("Fetching URL exceptions: ", url);
             const {urlContainerMappings, urlExceptions} = await browser.storage.sync.get({urlContainerMappings: [], urlExceptions: []})
             console.debug("Loaded exceptions : ", urlExceptions);
-            const urlsMatched = urlExceptions.reduce((matches, current) => {
-                if (url.match(current.pattern)) {
-                    matches.push(current)
+            // Check if any exception matches this URL
+            for (const exception of urlExceptions) {
+                if (url.match(exception.pattern)) {
+                    console.debug("URL matched exception:", url, exception);
+                    return true;
                 }
-                return matches
-            }, [])
-            console.debug("Following urls matched...", url, urlsMatched);
-            return urlsMatched.length > 0;
+            }
+            console.debug("No exceptions matched for URL:", url);
+            return false;
         } catch (e) {
             console.debug("Error fetching URL exceptions: ", e);
             // if we cannot fetch exceptions, we assume that there are no exceptions
@@ -71,15 +72,17 @@
             console.debug("Fetching URL container mappings", url);
             const {urlContainerMappings, urlExceptions} = await browser.storage.sync.get({urlContainerMappings: [], urlExceptions: []})
             console.debug("Loaded url container mappings", urlContainerMappings);
-            const urlsMatched = urlContainerMappings.reduce((matches, current) => {
-                if (url.match(current.pattern)) {
-                    matches.push(current)
+            // Find the first matching mapping in order - array position determines priority
+            let matchedMapping = null;
+            for (const mapping of urlContainerMappings) {
+                if (url.match(mapping.pattern)) {
+                    matchedMapping = mapping;
+                    console.debug("URL matched mapping with priority:", url, mapping);
+                    break;
                 }
-                return matches
-            }, [])
-            console.debug("Following urls matched...", url, urlsMatched);
+            }
             // if there are multiple matches, we will use the first one
-            let containerName = urlsMatched.length > 0 ? urlsMatched[0].containerName : null;
+            let containerName = matchedMapping ? matchedMapping.containerName : null;
             if (!containerName) {
                 console.debug("No container assigned for URL: ", url);
                 return {continue: true};
