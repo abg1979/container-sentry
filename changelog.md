@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v1.0.7]
+
+- Added ordering support for URL mappings:
+  - Users can now reorder URL pattern mappings in the settings UI.
+  - Updated `src/settings/Settings.vue` with reordering functionality.
+  - Enhanced `src/background/background.js` to respect the order of URL mappings when determining which container to use.
+- Updated `src/extension/manifest.json`:
+  - Version bump to 1.0.7.
+- Updated `.vscode/launch.json`:
+  - Updated debugger extension ID for improved debugging experience.
+
 ## [v1.0.6]
 
 - Updated `package.json` and `src/extension/manifest.json`:
