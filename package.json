@@ -7,6 +7,7 @@
     "scripts": {
         "start": "concurrently \"webpack --watch\" \"yarn web-ext run --source-dir build/webpack\"",
         "watch:webpack": "webpack --watch",
+        "test": "node --test tests/*.test.mjs",
         "lint": "yarn web-ext lint"
     },
     "dependencies": {
