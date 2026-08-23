@@ -7,12 +7,13 @@
     "scripts": {
         "start": "concurrently \"webpack --watch\" \"yarn web-ext run --source-dir build/webpack\"",
         "watch:webpack": "webpack --watch",
+        "test": "node --test tests/*.test.mjs",
         "lint": "yarn web-ext lint"
     },
     "dependencies": {
         "concurrently": "^9.2.1",
         "copy-webpack-plugin": "^13.0.1",
-        "css-loader": "^7.1.2",
+        "css-loader": "^7.1.4",
         "fs-extra": "^11.3.3",
         "html-webpack-plugin": "^5.5.0",
         "sass": "^1.97.3",
@@ -22,7 +23,7 @@
         "vue": "^3.5.21",
         "vue-loader": "^17.0.0",
         "web-ext": "^9.3.0",
-        "webpack": "^5.73.0",
+        "webpack": "^5.104.1",
         "webpack-cli": "^6.0.1"
     },
     "devDependencies": {
