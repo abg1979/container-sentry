@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.0.9]
+
 - Add a PowerShell 7 script for validating, tagging, packaging, and publishing GitHub Releases.
 - Fix the settings page colors and form controls for readable light and dark themes.
 
