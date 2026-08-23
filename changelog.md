@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Add a PowerShell 7 script for validating, tagging, packaging, and publishing GitHub Releases.
+
 ## [v1.0.8]
 
 - Add an opt-in, memory-only redirect URL discovery workflow that can draft reviewed container mappings or exceptions.

@@ -94,6 +94,19 @@ gulp dist
 This will run a webpack build and place the output in `build/webpack/`, followed by packaging the extension using `web-ext` and placing output
 in `dist/`.
 
+### Releasing
+
+GitHub Releases are created from a clean, synchronized `main` branch using PowerShell 7. Add the release notes under `Unreleased` in
+`changelog.md`, then run:
+
+```powershell
+pwsh ./scripts/release.ps1 -Version 1.0.9
+```
+
+The script updates the package and extension versions, promotes the changelog notes, runs the project checks, commits and waits for CI, creates
+and pushes the version tag, builds the XPI and source archive, generates SHA-256 checksums, and publishes the GitHub Release. It requires
+authenticated `gh`, `git`, and `mise` commands.
+
 ### Credits
 
 This extension borrows a lot from the following extensions
