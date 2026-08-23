@@ -4,10 +4,14 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## [v1.0.8]
+
 - Add an opt-in, memory-only redirect URL discovery workflow that can draft reviewed container mappings or exceptions.
 - Ignore malformed URL patterns without preventing later exception or container-mapping rules from matching.
 - Keep the container chooser open until its replacement tab has been created successfully.
 - Make full-URL and pattern debug logging opt-in through the extension preferences and store the setting locally.
+- Upgrade project dependencies, including Vue, Sass, Webpack, css-loader, and UUID.
+- Upgrade GitHub Actions to Node 24-based releases and pin Yarn for reproducible immutable installs.
 
 ## [v1.0.7]
 
