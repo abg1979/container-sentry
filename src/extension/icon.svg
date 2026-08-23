@@ -1,7 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="128px" height="128px" version="1.1" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#4c4c4c"
-     fill-opacity="context-fill-opacity">
-    <path d="M6 6.5h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1"/>
-    <path
-        d="M1 5a1 1 0 0 1 2 0v7a1 1 0 0 0 1 1h8a1 1 0 0 0 1 -1v-7a1 1 0 0 1 2 0v8a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-8M1.75 4.0318l11.3137 -3a1 1 0 0 1 0.5 1.9365l-11.3137 3a1 1 0 0 1 -0.5 -1.9365"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+    <title id="title">Container Sentry</title>
+    <defs>
+        <linearGradient id="background" x1="20" y1="12" x2="108" y2="116" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#6750E8"/>
+            <stop offset="1" stop-color="#2D5FD4"/>
+        </linearGradient>
+        <linearGradient id="container" x1="42" y1="50" x2="86" y2="91" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#FFFFFF"/>
+            <stop offset="1" stop-color="#DDE8FF"/>
+        </linearGradient>
+    </defs>
+
+    <rect x="4" y="4" width="120" height="120" rx="28" fill="url(#background)"/>
+    <path d="M64 20 101 34v28c0 23-14 39-37 49C41 101 27 85 27 62V34l37-14Z"
+          fill="#132C71" fill-opacity=".28" stroke="#FFFFFF" stroke-width="7" stroke-linejoin="round"/>
+
+    <path d="m42 54 22-10 22 10-22 10-22-10Z" fill="#FFFFFF"/>
+    <path d="m42 54 22 10v27L42 80V54Z" fill="url(#container)"/>
+    <path d="m86 54-22 10v27l22-11V54Z" fill="#B8CEFF"/>
+
+    <path d="M64 44v47M42 54l22 10 22-10" fill="none" stroke="#2D5FD4" stroke-width="4"
+          stroke-linejoin="round"/>
+    <circle cx="64" cy="72" r="6" fill="#132C71"/>
+    <path d="M64 77v8" stroke="#132C71" stroke-width="5" stroke-linecap="round"/>
 </svg>

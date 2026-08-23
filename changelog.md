@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Replace the extension icon with a high-contrast shield and secured-container design, including high-DPI manifest support.
+
 ## [v1.0.9]
 
 - Add a PowerShell 7 script for validating, tagging, packaging, and publishing GitHub Releases.
