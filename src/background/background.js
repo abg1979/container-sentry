@@ -17,6 +17,85 @@
         }
     });
 
+    const URL_DISCOVERY_MESSAGE_TYPE = 'url-discovery';
+    const URL_DISCOVERY_MAX_EVENTS = 200;
+    let discoverySession = {
+        active: false,
+        startedAt: null,
+        entries: [],
+    };
+    let nextDiscoverySequence = 1;
+    let lastDiscoveryEventKey = null;
+
+    const getDiscoverySnapshot = () => ({
+        active: discoverySession.active,
+        startedAt: discoverySession.startedAt,
+        entries: discoverySession.entries.map(entry => ({...entry})),
+    });
+
+    const resetDiscoverySession = active => {
+        discoverySession = {
+            active,
+            startedAt: active ? Date.now() : null,
+            entries: [],
+        };
+        nextDiscoverySequence = 1;
+        lastDiscoveryEventKey = null;
+    };
+
+    const recordDiscoveryEvent = event => {
+        if (!discoverySession.active) return;
+
+        const eventKey = [
+            event.type,
+            event.tabId,
+            event.requestId,
+            event.url,
+            event.redirectUrl,
+            event.statusCode,
+            event.error,
+        ].join('\u0000');
+        if (eventKey === lastDiscoveryEventKey) return;
+
+        lastDiscoveryEventKey = eventKey;
+        discoverySession.entries.push({
+            ...event,
+            sequence: nextDiscoverySequence++,
+            timestamp: Date.now(),
+        });
+        if (discoverySession.entries.length > URL_DISCOVERY_MAX_EVENTS) {
+            discoverySession.entries.splice(0, discoverySession.entries.length - URL_DISCOVERY_MAX_EVENTS);
+        }
+    };
+
+    browser.runtime.onMessage.addListener(message => {
+        if (!message || message.type !== URL_DISCOVERY_MESSAGE_TYPE) return undefined;
+
+        switch (message.action) {
+            case 'start':
+                resetDiscoverySession(true);
+                break;
+            case 'stop':
+                discoverySession.active = false;
+                break;
+            case 'clear':
+                resetDiscoverySession(false);
+                break;
+            case 'snapshot':
+                break;
+            default:
+                return Promise.resolve({
+                    ok: false,
+                    error: `Unknown URL discovery action: ${message.action}`,
+                });
+        }
+
+        return Promise.resolve({
+            ok: true,
+            session: getDiscoverySnapshot(),
+        });
+    });
+
     /*
      * Ignore any pages which were assigned in Multi-Account Containers (MAC)
      */
@@ -163,11 +242,36 @@
         }
     };
     browser.webRequest.onCompleted.addListener(options => {
+        recordDiscoveryEvent({
+            type: 'completed',
+            tabId: options.tabId,
+            requestId: options.requestId,
+            url: options.url,
+            statusCode: options.statusCode,
+        });
         cleanCancelledRequest(options.tabId);
     }, {urls: ['<all_urls>'], types: ['main_frame']});
 
     browser.webRequest.onErrorOccurred.addListener(options => {
+        recordDiscoveryEvent({
+            type: 'error',
+            tabId: options.tabId,
+            requestId: options.requestId,
+            url: options.url,
+            error: options.error,
+        });
         cleanCancelledRequest(options.tabId);
+    }, {urls: ['<all_urls>'], types: ['main_frame']});
+
+    browser.webRequest.onBeforeRedirect.addListener(options => {
+        recordDiscoveryEvent({
+            type: 'redirect',
+            tabId: options.tabId,
+            requestId: options.requestId,
+            url: options.url,
+            redirectUrl: options.redirectUrl,
+            statusCode: options.statusCode,
+        });
     }, {urls: ['<all_urls>'], types: ['main_frame']});
 
     const shouldCancelEarly = function (tab, request) {
@@ -191,6 +295,12 @@
     };
 
     browser.webRequest.onBeforeRequest.addListener(async function containTab(request) {
+        recordDiscoveryEvent({
+            type: 'request',
+            tabId: request.tabId,
+            requestId: request.requestId,
+            url: request.url,
+        });
         debug("Received request for: ", request.url);
 
         if (request.tabId === -1) {

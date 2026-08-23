@@ -46,11 +46,25 @@ Here is the configuration which worked for me:
   - `.+github.com.+corporate_github_org.+` -> Work
   - `.+github.com.+` -> Code
 
+### Discovering redirect URLs
+
+If a login or VPN flow passes through URLs that are difficult to identify, open the extension preferences and use **Discover redirect URLs**:
+
+1. Select **Start capture**.
+2. Reproduce the navigation in another tab, choosing a container if prompted.
+3. Return to the preferences and select **Stop capture**.
+4. Review the top-level requests and redirects, then create either a container mapping or an exception from the relevant URL.
+5. Review the suggested regular expression and add it as a draft. The suggestion uses the URL origin and path while omitting query parameters and fragments by default.
+6. Review the new entry in the configuration and select **Save**.
+
+Capture is opt-in and held only in the background script's memory; it is never written to local or synced extension storage. Complete captured URLs
+are shown during review and may still contain sensitive authentication data. Apply a rule or select **Discard capture** to clear them.
+
 ### Debug logging
 
 To troubleshoot pattern matching, open the extension preferences and enable **Debug logging**, then open Firefox's Browser Console. Debug logging
 includes complete URLs and configured patterns, which may contain sensitive information. It is disabled by default and should be turned off after
-troubleshooting.
+troubleshooting. For redirect discovery, prefer the guided capture workflow above.
 
 ## Contributing
 
