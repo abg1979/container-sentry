@@ -131,10 +131,10 @@ try {
     Set-JsonVersion -Path (Join-Path $repositoryRoot 'package.json') -NewVersion $Version
     Set-JsonVersion -Path (Join-Path $repositoryRoot 'src/extension/manifest.json') -NewVersion $Version
 
-    Invoke-Checked mise exec -- yarn install --immutable
-    Invoke-Checked mise exec -- yarn test
-    Invoke-Checked mise exec -- yarn lint
-    Invoke-Checked mise exec -- yarn gulp build
+    Invoke-Checked mise exec '--' yarn install --immutable
+    Invoke-Checked mise exec '--' yarn test
+    Invoke-Checked mise exec '--' yarn lint
+    Invoke-Checked mise exec '--' yarn gulp build
     Invoke-Checked git diff --check
 
     Invoke-Checked git add package.json src/extension/manifest.json changelog.md
@@ -164,8 +164,8 @@ try {
     Invoke-Checked git tag $tag
     Invoke-Checked git push origin $tag
 
-    Invoke-Checked mise exec -- yarn gulp clean
-    Invoke-Checked mise exec -- yarn gulp dist
+    Invoke-Checked mise exec '--' yarn gulp clean
+    Invoke-Checked mise exec '--' yarn gulp dist
 
     $distPath = Join-Path $repositoryRoot 'dist'
     $xpiName = "container_sentry-$Version.xpi"
