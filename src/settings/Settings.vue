@@ -386,41 +386,64 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@media (prefers-color-scheme: light) {
-    th {
-        background-color: #f2f2f2;
-    }
-    tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-    tr:hover {
-        background-color: #f1f1f1;
-    }
-    th,
-    td {
-        border: 1px solid #ddd;
-    }
+:global(:root) {
+    color-scheme: light;
+    --page-background: #ffffff;
+    --surface-background: #f9f9fb;
+    --control-background: #ffffff;
+    --hover-background: #f1f1f4;
+    --heading-background: #e9e9ef;
+    --text-color: #15141a;
+    --muted-text-color: #5b5b66;
+    --border-color: #b1b1b8;
+    --focus-color: #0060df;
+    --capture-color: #9a4f00;
+    --error-color: #a4000f;
+    --success-color: #006b45;
+    --code-background: #eeeeF2;
 }
 
 @media (prefers-color-scheme: dark) {
-    th {
-        background-color: #333333;
+    :global(:root) {
+        color-scheme: dark;
+        --page-background: #1c1b22;
+        --surface-background: #2b2a33;
+        --control-background: #42414d;
+        --hover-background: #3a3944;
+        --heading-background: #383741;
+        --text-color: #fbfbfe;
+        --muted-text-color: #cfcfd8;
+        --border-color: #5b5b66;
+        --focus-color: #00ddff;
+        --capture-color: #ffbd4f;
+        --error-color: #ff9aa2;
+        --success-color: #54ffbd;
+        --code-background: #15141a;
     }
-    tr:nth-child(even) {
-        background-color: #222222;
-    }
-    tr:hover {
-        background-color: #444444;
-    }
-    th,
-    td {
-        border: 1px solid #888888;
-    }
+}
+
+:global(body) {
+    background-color: var(--page-background);
+    color: var(--text-color);
+    font-family: system-ui, sans-serif;
 }
 
 th,
 td {
+    border: 1px solid var(--border-color);
     padding: 12px;
+}
+
+th {
+    background-color: var(--heading-background);
+}
+
+tr:nth-child(even) {
+    background-color: var(--surface-background);
+}
+
+tr:hover {
+    background-color: var(--hover-background);
 }
 
 table {
@@ -433,6 +456,42 @@ table {
 input[type='text'] {
     box-sizing: border-box;
     width: 100%;
+}
+
+button,
+input,
+select {
+    background-color: var(--control-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font: inherit;
+}
+
+button,
+select {
+    padding: 5px 8px;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+    background-color: var(--hover-background);
+}
+
+button:disabled {
+    color: var(--muted-text-color);
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--focus-color);
+    outline-offset: 2px;
 }
 
 .actions {
@@ -451,8 +510,7 @@ input[type='text'] {
 }
 
 .order-controls button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    opacity: 0.65;
 }
 
 .priority-hint {
@@ -467,7 +525,9 @@ input[type='text'] {
 }
 
 .url-discovery {
-    border: 1px solid;
+    background-color: var(--surface-background);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
     padding: 16px;
 }
 
@@ -489,7 +549,7 @@ input[type='text'] {
 }
 
 .capture-active {
-    color: #b45309;
+    color: var(--capture-color);
     font-weight: 700;
 }
 
@@ -519,7 +579,10 @@ input[type='text'] {
 }
 
 code {
+    background-color: var(--code-background);
+    border-radius: 3px;
     overflow-wrap: anywhere;
+    padding: 1px 3px;
 }
 
 .event-actions {
@@ -527,7 +590,7 @@ code {
 }
 
 .rule-draft {
-    border-top: 1px solid;
+    border-top: 1px solid var(--border-color);
     margin-top: 18px;
     padding-top: 12px;
 }
@@ -544,16 +607,21 @@ code {
 }
 
 .error-message {
-    color: #b91c1c;
+    color: var(--error-color);
 }
 
 .success-message {
-    color: #047857;
+    color: var(--success-color);
     font-weight: 600;
+}
+
+.priority-hint,
+.tab-id,
+.debug-settings p {
+    color: var(--muted-text-color);
 }
 
 .debug-settings p {
     margin-top: 6px;
-    opacity: 0.8;
 }
 </style>
