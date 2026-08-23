@@ -1,5 +1,22 @@
 ;(async function () {
 
+    let debugLogging = false;
+    try {
+        debugLogging = (await browser.storage.local.get({debugLogging: false})).debugLogging;
+    } catch (e) {
+        console.warn("Unable to load the debug logging preference:", e);
+    }
+    const debug = (...args) => {
+        if (debugLogging) {
+            console.debug(...args);
+        }
+    };
+    browser.storage.onChanged.addListener((changes, areaName) => {
+        if (areaName === 'local' && changes.debugLogging) {
+            debugLogging = changes.debugLogging.newValue;
+        }
+    });
+
     /*
      * Ignore any pages which were assigned in Multi-Account Containers (MAC)
      */
@@ -33,7 +50,16 @@
             });
             return Boolean(assignment);
         } catch (e) {
-            console.debug("Error fetching MAC assignment: ", e);
+            debug("Error fetching MAC assignment: ", e);
+            return false;
+        }
+    };
+
+    const matchesPattern = function (url, pattern) {
+        try {
+            return new RegExp(pattern).test(url);
+        } catch (e) {
+            console.warn("Ignoring invalid URL pattern:", pattern, e);
             return false;
         }
     };
@@ -43,20 +69,20 @@
         if (!macAddonEnabled) return true;
 
         try {
-            console.debug("Fetching URL exceptions: ", url);
+            debug("Fetching URL exceptions: ", url);
             const {urlContainerMappings, urlExceptions} = await browser.storage.sync.get({urlContainerMappings: [], urlExceptions: []})
-            console.debug("Loaded exceptions : ", urlExceptions);
+            debug("Loaded exceptions : ", urlExceptions);
             // Check if any exception matches this URL
             for (const exception of urlExceptions) {
-                if (url.match(exception.pattern)) {
-                    console.debug("URL matched exception:", url, exception);
+                if (matchesPattern(url, exception.pattern)) {
+                    debug("URL matched exception:", url, exception);
                     return true;
                 }
             }
-            console.debug("No exceptions matched for URL:", url);
+            debug("No exceptions matched for URL:", url);
             return false;
         } catch (e) {
-            console.debug("Error fetching URL exceptions: ", e);
+            debug("Error fetching URL exceptions: ", e);
             // if we cannot fetch exceptions, we assume that there are no exceptions
             return false;
         }
@@ -69,58 +95,58 @@
         }
 
         try {
-            console.debug("Fetching URL container mappings", url);
+            debug("Fetching URL container mappings", url);
             const {urlContainerMappings, urlExceptions} = await browser.storage.sync.get({urlContainerMappings: [], urlExceptions: []})
-            console.debug("Loaded url container mappings", urlContainerMappings);
+            debug("Loaded url container mappings", urlContainerMappings);
             // Find the first matching mapping in order - array position determines priority
             let matchedMapping = null;
             for (const mapping of urlContainerMappings) {
-                if (url.match(mapping.pattern)) {
+                if (matchesPattern(url, mapping.pattern)) {
                     matchedMapping = mapping;
-                    console.debug("URL matched mapping with priority:", url, mapping);
+                    debug("URL matched mapping with priority:", url, mapping);
                     break;
                 }
             }
             // if there are multiple matches, we will use the first one
             let containerName = matchedMapping ? matchedMapping.containerName : null;
             if (!containerName) {
-                console.debug("No container assigned for URL: ", url);
+                debug("No container assigned for URL: ", url);
                 return {continue: true};
             }
-            console.debug("URL has a container assigned... Trying to switch to it: ", url, containerName);
+            debug("URL has a container assigned... Trying to switch to it: ", url, containerName);
             const container = await browser.contextualIdentities.query({
                 name: containerName,
             });
             if (container.length === 0) {
-                console.debug("Container not found... Skipping switch: ", url, containerName);
+                debug("Container not found... Skipping switch: ", url, containerName);
                 return {continue: true};
             }
             const cookieStoreId = container[0].cookieStoreId;
             if (cookieStoreId && typeof cookieStoreId === 'string') {
-                console.debug(`Replacing tab. cookieStoreId was '${cookieStoreId}'.`);
+                debug(`Replacing tab. cookieStoreId was '${cookieStoreId}'.`);
                 try {
-                    console.debug("Checking already contained: ", url);
+                    debug("Checking already contained: ", url);
                     if (currentTab.cookieStoreId === cookieStoreId) {
-                        console.debug("Already contained in same container... Returning: ", url);
+                        debug("Already contained in same container... Returning: ", url);
                         return {void : true};
                     }
                 } catch (e) {
                     /* we are not contained yet */
-                    console.debug("Cannot find tab container...: ", e, "url: ", url);
+                    debug("Cannot find tab container...: ", e, "url: ", url);
                 }
         
                 const {active, index, windowId} = currentTab;
                 await browser.tabs.create({url: url + '', active, cookieStoreId, index, windowId});
-                console.debug(`Successfully replaced tab. cookieStoreId was '${cookieStoreId}'.`);
-                console.debug(`Removing current tab. Tab ID was '${currentTab.id}'.`);
+                debug(`Successfully replaced tab. cookieStoreId was '${cookieStoreId}'.`);
+                debug(`Removing current tab. Tab ID was '${currentTab.id}'.`);
                 await browser.tabs.remove(currentTab.id);
-                console.debug(`Successfully removed current tab. Tab Id was '${currentTab.id}'.`);
+                debug(`Successfully removed current tab. Tab Id was '${currentTab.id}'.`);
                 return {cancel: true};
             }
-            console.debug(`Not replacing tab. cookieStoreId was '${cookieStoreId}'.`);
+            debug(`Not replacing tab. cookieStoreId was '${cookieStoreId}'.`);
             return {continue: true};
         } catch (e) {
-            console.debug("Not replacing tab. error was:", e);
+            debug("Not replacing tab. error was:", e);
             return {continue: true};
         }
     };
@@ -165,72 +191,72 @@
     };
 
     browser.webRequest.onBeforeRequest.addListener(async function containTab(request) {
-        console.debug("Received request for: ", request.url);
+        debug("Received request for: ", request.url);
 
         if (request.tabId === -1) {
-            console.debug("Tab cannot be contained: ", request.url);
+            debug("Tab cannot be contained: ", request.url);
             return void 0;
         }
 
         const tab = await browser.tabs.get(request.tabId);
         if (tab.incognito) {
-            console.debug("Incognito Tab cannot be contained: ", request.url);
+            debug("Incognito Tab cannot be contained: ", request.url);
             return void 0;
         }
 
         // check if Multi Account Container extension is enabled
         // we do not have anything to do if it is disabled.
         if (!macAddonEnabled) {
-            console.debug("MAC is disabled... Not doing anything: ", request.url);
+            debug("MAC is disabled... Not doing anything: ", request.url);
             return void 0;
         }
-        console.debug("MAC is enabled... Continuing: ", request.url);
+        debug("MAC is enabled... Continuing: ", request.url);
 
         // check if URL has exception allowed, we do not
         // try to contain it if it is allowed.
-        console.debug("Checking if URL has exception: ", request.url);
+        debug("Checking if URL has exception: ", request.url);
         if (await hasURLException(request.url)) {
-            console.debug("URL has exception... Not doing anything: ", request.url);
+            debug("URL has exception... Not doing anything: ", request.url);
             return void 0;
         }
-        console.debug("URL does not have exception... Continuing: ", request.url);
+        debug("URL does not have exception... Continuing: ", request.url);
 
         // check if user has already cancelled this request
         if (request && shouldCancelEarly(tab, request)) {
-            console.debug("Request is cancelled early, not doing anything: ", request.url);
+            debug("Request is cancelled early, not doing anything: ", request.url);
             return void 0;
         }
 
         // check if url has a container assigned
         // we will switch to that container if it is assigned.
         // and remove the current tab.
-        console.debug("Checking if URL has container assigned: ", request.url);
+        debug("Checking if URL has container assigned: ", request.url);
         let response = await doURLContainerMatchSwitch(request.url, tab); 
         if (response?.cancel) {
-            console.debug("URL has container assigned... switched to it : ", request.url);
+            debug("URL has container assigned... switched to it : ", request.url);
             return {cancel: true};
         }
         if (response?.void) {
-            console.debug("URL has container assigned... already in same : ", request.url);
+            debug("URL has container assigned... already in same : ", request.url);
             return void 0;
         }
 
         // check if Multi Account Container is handling this url
         // in that case we do not do anything.
-        console.debug("Checking if MAC is handling this url: ", request.url);
+        debug("Checking if MAC is handling this url: ", request.url);
         if (await isMACAssigned(request.url)) {
-            console.debug("MAC is handling this url... Not doing anything: ", request.url);
+            debug("MAC is handling this url... Not doing anything: ", request.url);
             return void 0;
         }
 
         try {
-            console.debug("Checking already contained: ", request.url);
+            debug("Checking already contained: ", request.url);
             await browser.contextualIdentities.get(tab.cookieStoreId);
-            console.debug("Already contained... Returning: ", request.url);
+            debug("Already contained... Returning: ", request.url);
             return void 0;
         } catch (e) {
             /* we are not contained yet */
-            console.debug("Cannot find tab container...: ", e, "url: ", request.url);
+            debug("Cannot find tab container...: ", e, "url: ", request.url);
         }
 
         // if we are here, we need to ask user to choose a container.
@@ -239,7 +265,7 @@
         // after user selection, a new tab will be opened in the chosen container
         // with the url of the current tab.
         // no data is retained from the current tab.
-        console.debug("Building container chooser UI: ", request.url);
+        debug("Building container chooser UI: ", request.url);
         const choseUrl = new URL(browser.runtime.getURL('/togo/index.html'));
         choseUrl.searchParams.set('go', request.url);
         await browser.tabs.create({

@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+- Ignore malformed URL patterns without preventing later exception or container-mapping rules from matching.
+- Keep the container chooser open until its replacement tab has been created successfully.
+- Make full-URL and pattern debug logging opt-in through the extension preferences and store the setting locally.
 
 ## [v1.0.7]
 

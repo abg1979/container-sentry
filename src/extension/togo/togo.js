@@ -38,8 +38,8 @@
     const switchContainer = async function (cookieStoreId) {
         const current = await browser.tabs.getCurrent();
         const {active, index, windowId} = current;
-        browser.tabs.create({url: url + '', active, cookieStoreId, index, windowId});
-        browser.tabs.remove(current.id);
+        await browser.tabs.create({url: url + '', active, cookieStoreId, index, windowId});
+        await browser.tabs.remove(current.id);
     };
 
     document.addEventListener('click', async event => {
@@ -51,7 +51,7 @@
         event.preventDefault();
         const cookieStoreId = button.dataset.cookieStoreId;
         if (!cookieStoreId) return;
-        switchContainer(cookieStoreId);
+        await switchContainer(cookieStoreId);
     }, true);
 
     const renderPrefix = function (contextPrefix) {
@@ -85,7 +85,7 @@
 
     // tracks keys pressed, if a single context starts with the keys pressed,
     // then use that context
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', async event => {
 
         if (event.altKey || event.ctrlKey || event.metaKey) return;
 
@@ -108,7 +108,7 @@
 
         // open the tab if there is one and only one matching
         if (matching.length === 1) {
-            switchContainer(matching[0].cookieStoreId);
+            await switchContainer(matching[0].cookieStoreId);
         } else {
             if (matching.length === 0) {
                 contextPrefix = '';

@@ -62,6 +62,13 @@
         </tr>
         </tbody>
     </table>
+    <section class="debug-settings">
+        <label>
+            <input type="checkbox" v-model="debugLogging" @change="saveDebugLogging"/>
+            Enable debug logging
+        </label>
+        <p>Logs complete URLs and patterns to the Browser Console. This may expose sensitive information.</p>
+    </section>
 </template>
 
 <script>
@@ -74,13 +81,15 @@ export default {
             urlContainerMappings: [],
             urlExceptions: [],
             contextualIdentities: [],
+            debugLogging: false,
         }
     },
     async mounted() {
-        console.debug('Load storage:', await browser.storage.sync.get({urls: []}))
         const {urlContainerMappings, urlExceptions} = await browser.storage.sync.get({urlContainerMappings: [], urlExceptions: []})
+        const {debugLogging} = await browser.storage.local.get({debugLogging: false})
         this.urlContainerMappings = urlContainerMappings
         this.urlExceptions = urlExceptions
+        this.debugLogging = debugLogging
         browser.storage.sync.onChanged.addListener(this.syncStorage)
         this.contextualIdentities = await browser.contextualIdentities.query({})
     },
@@ -105,8 +114,6 @@ export default {
             })
         },
         save() {
-            console.debug('Save URLs:', toRaw(this.urlContainerMappings))
-            console.debug('Save URLExceptions:', toRaw(this.urlExceptions))
             for (let i = this.urlContainerMappings.length - 1; i >= 0; i--) {
                 if (this.urlContainerMappings[i].pattern === '') {
                     this.urlContainerMappings.splice(i, 1)
@@ -122,8 +129,12 @@ export default {
                 urlExceptions: toRaw(this.urlExceptions),
             })
         },
+        async saveDebugLogging() {
+            await browser.storage.local.set({
+                debugLogging: this.debugLogging,
+            })
+        },
         syncStorage(changes) {
-            console.debug('Storage updated:', changes)
             if (changes.urlContainerMappings) {
                 this.urlContainerMappings = changes.urlContainerMappings.newValue
             }
@@ -244,5 +255,14 @@ table {
     font-size: 0.8em;
     font-weight: normal;
     opacity: 0.7;
+}
+
+.debug-settings {
+    margin: 20px 0;
+}
+
+.debug-settings p {
+    margin-top: 6px;
+    opacity: 0.8;
 }
 </style>

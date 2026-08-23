@@ -46,6 +46,12 @@ Here is the configuration which worked for me:
   - `.+github.com.+corporate_github_org.+` -> Work
   - `.+github.com.+` -> Code
 
+### Debug logging
+
+To troubleshoot pattern matching, open the extension preferences and enable **Debug logging**, then open Firefox's Browser Console. Debug logging
+includes complete URLs and configured patterns, which may contain sensitive information. It is disabled by default and should be turned off after
+troubleshooting.
+
 ## Contributing
 
 ### Prerequisites
