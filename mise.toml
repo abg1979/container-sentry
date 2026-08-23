@@ -6,7 +6,7 @@ _.path = ['{{config_root}}/node_modules/.bin']
 
 [tools]
 node = "22"
-yarn = "4"
+yarn = "4.12.0"
 
 [tasks.setup]
 description = "Setup the project"

@@ -27,7 +27,7 @@ jobs:
               run: yarn --version
 
             - name: Install dependencies
-              run: yarn install
+              run: yarn install --immutable
 
             - name: Build
               run: gulp dist
