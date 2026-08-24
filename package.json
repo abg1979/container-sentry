@@ -27,7 +27,7 @@
         "webpack-cli": "^6.0.1"
     },
     "devDependencies": {
-        "@types/firefox-webext-browser": "^120.0.4",
+        "@types/firefox-webext-browser": "^143.0.0",
         "gulp": "^5.0.1",
         "gulp-clean": "^0.4.0"
     }
